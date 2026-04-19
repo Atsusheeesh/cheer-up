@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ❤️</title>
+
+<!-- 💛 FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: #FFF4A3;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* container */
+.container {
+    width: 90%;
+    max-width: 350px;
+    transition: opacity 0.8s ease;
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+/* START SCREEN */
+.start-screen h1 {
+    font-size: 20px;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* GIF */
+img {
+    width: 100%;
+    max-width: 250px;
+    border-radius: 18px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* TEXT */
+p {
+    margin-top: 18px;
+    font-size: 16px;
+    color: #444;
+    min-height: 50px;
+    font-weight: 300;
+}
+
+/* BUTTON */
+button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 30px;
+    background-color: #FFD966;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+/* MUSIC BUTTON */
+.music-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.55);
+    font-size: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    backdrop-filter: blur(6px);
+}
+
+/* ❤️ HEARTS */
+.heart {
+    position: absolute;
+    bottom: -20px;
+    font-size: 12px;
+    animation: floatUp linear forwards;
+    opacity: 0.8;
+    color: red;
+}
+
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 0.8; }
+    to { transform: translateY(-110vh); opacity: 0; }
+}
+
+/* FINAL SCREEN */
+.final-screen {
+    font-size: 18px;
+    color: #333;
+    padding: 20px;
+    animation: fadeIn 1.5s ease forwards;
+    font-weight: 300;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC -->
+<audio id="bgm" loop preload="auto">
+    <source src="bgmusic.mp3" type="audio/mpeg">
+</audio>
+
+<!-- MUSIC BUTTON -->
+<button class="music-btn" onclick="toggleMusic()">🔇</button>
+
+<!-- MAIN -->
+<div class="container" id="content">
+
+    <!-- START SCREEN -->
+    <div id="startScreen">
+        <div class="start-screen">
+            <h1>I HOPE THIS MAKE YOUR DAY 💛</h1>
+            <button onclick="startExperience()">CLICK ME</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+let step = 0;
+let typingInterval;
+
+/* GIFS */
+const gifs = [
+    "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmJsbGx0bjE1aGZhZGJvZXRscTMxZmxjZWNlc3Q0Zm9lemJoMmF1bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Zl7u48zLVFgLpRwq6f/giphy.gif",
+    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGJ6OWpyNTJnMTdlYXljd2Z5eDBsMzFhM2M1NnB3eDEzdTJidWN0bSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/8QbwUh40Hl96yMgvOx/giphy.gif",
+    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWYwMXhheDhkYjdtdDF4bGpvczQxcnMxcTA2ZnZzeHA2c2F3OGF1eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/wIePCLOwUQ4RW/giphy.gif",
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDFoOGNva2hhZDRzdXNob28xNnRwZTA2MTVkZ2Y1eGwzeHM4NnI0ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W1hd3uXRIbddu/giphy.gif"
+];
+
+/* MESSAGES */
+const messages = [
+    "I know things haven’t been easy lately… and I won’t pretend they are. But I want you to know—there are still people who care about you, even quietly like this.",
+    "You don’t have to be okay all the time. You’re still allowed to feel everything you're feeling. But I just want you to know someone cares about you ❤️",
+    "And even if today feels heavy… I hope this somehow made it feel a little lighter.",
+    "I just hope that while you’re hearing this…\n\nit made you smile, even just a little.\nEven if it’s small… even if it fades quickly.\n\nStill, I hope it gave you one quiet moment where things didn’t feel as heavy. 💛"
+];
+
+/* BUTTON TEXT */
+const buttonTexts = [
+    "Tap this gently",
+    "Keep going…",
+    "Just one more",
+    "Last one ❤️"
+];
+
+/* MUSIC */
+const music = document.getElementById("bgm");
+
+function startMusic() {
+    if (music.paused) {
+        music.volume = 0;
+
+        music.play().then(() => {
+            let v = 0;
+
+            let fadeIn = setInterval(() => {
+                if (v < 0.25) {
+                    v += 0.01;
+                    music.volume = v;
+                } else {
+                    clearInterval(fadeIn);
+                }
+            }, 60);
+        }).catch(() => {});
+    }
+}
+
+/* START EXPERIENCE */
+function startExperience() {
+
+    startMusic();
+
+    document.getElementById("startScreen").classList.add("fade-out");
+
+    setTimeout(() => {
+        document.getElementById("content").innerHTML = `
+            <img id="gif">
+            <p id="text"></p>
+            <button onclick="nextStep()" id="btn">Tap this gently</button>
+        `;
+
+        document.getElementById("gif").src = gifs[0];
+        typeText(messages[0]);
+
+    }, 500);
+}
+
+/* TYPEWRITER */
+function typeText(text) {
+    const el = document.getElementById("text");
+    el.innerHTML = "";
+    clearInterval(typingInterval);
+
+    let i = 0;
+    typingInterval = setInterval(() => {
+        if (i < text.length) {
+            el.innerHTML += text.charAt(i);
+            i++;
+        } else {
+            clearInterval(typingInterval);
+        }
+    }, 25);
+}
+
+/* NEXT */
+function nextStep() {
+
+    if (step >= gifs.length - 1) {
+        showFinalScreen();
+        return;
+    }
+
+    const content = document.getElementById("content");
+    content.classList.add("fade-out");
+
+    setTimeout(() => {
+        step++;
+        document.getElementById("gif").src = gifs[step];
+        document.getElementById("btn").innerText = buttonTexts[step];
+        typeText(messages[step]);
+        content.classList.remove("fade-out");
+    }, 500);
+}
+
+/* FINAL */
+function showFinalScreen() {
+
+    const content = document.getElementById("content");
+
+    content.classList.add("fade-out");
+
+    setTimeout(() => {
+        content.innerHTML = `
+            <div class="final-screen">
+    <h2>That’s all ❤️</h2>
+
+    <p>
+        I don’t know what you’re going through… but I’m willing to listen and try to understand you.<br><br>
+
+        I hope this stayed with you a little longer.<br><br>
+
+        You matter more than you think.<br><br>
+
+        And if things ever get really heavy, you can call me. I’ll be there to listen, even if you don’t know what to say.<br><br>
+
+        I might not always have the right answers… but I want to be there and listen to you.<br><br>
+
+        Always take care of yourself, pretty princess.
+    </p>
+
+    <button onclick="location.reload()">Home 🏠</button>
+</div>
+        `;
+
+        content.classList.remove("fade-out");
+
+    }, 800);
+}
+
+/* MUSIC TOGGLE */
+function toggleMusic() {
+    const btn = document.querySelector(".music-btn");
+
+    if (music.paused) {
+        startMusic();
+        btn.innerHTML = "🔊";
+    } else {
+        music.pause();
+        btn.innerHTML = "🔇";
+    }
+}
+
+/* HEARTS */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 7000);
+}, 900);
+
+</script>
+
+</body>
+</html>
